@@ -1,4 +1,4 @@
-name: iOS Unsigned IPA
+name: iOS Unsigned Production IPA
 
 on:
   workflow_dispatch:
@@ -42,7 +42,7 @@ jobs:
       - name: Capacitor sync
         working-directory: clients/web
         env:
-          VELLUM_ENVIRONMENT: dev
+          VELLUM_ENVIRONMENT: production
         run: bunx cap sync ios
 
       - name: Install XcodeGen
@@ -62,7 +62,7 @@ jobs:
           rm -rf "$RUNNER_TEMP/DerivedData"
           xcodebuild build \
             -project App.xcodeproj \
-            -scheme "App Dev" \
+            -scheme "App" \
             -configuration Release \
             -destination 'generic/platform=iOS' \
             -derivedDataPath "$RUNNER_TEMP/DerivedData" \
@@ -88,7 +88,7 @@ jobs:
           BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")"
 
           test -x "$APP_PATH/$EXECUTABLE_NAME"
-          test "$BUNDLE_ID" = "ai.vocify-inc.vellum-assistant-ios.dev"
+          test "$BUNDLE_ID" = "ai.vocify-inc.vellum-assistant-ios"
 
           IPA_ROOT="$RUNNER_TEMP/ipa-root"
           rm -rf "$IPA_ROOT"
@@ -97,16 +97,16 @@ jobs:
 
           (
             cd "$IPA_ROOT"
-            /usr/bin/zip -qry "VellumAssistant-unsigned.ipa" Payload
+            /usr/bin/zip -qry "VellumAssistant-production-unsigned.ipa" Payload
           )
 
-          IPA_PATH="$IPA_ROOT/VellumAssistant-unsigned.ipa"
+          IPA_PATH="$IPA_ROOT/VellumAssistant-production-unsigned.ipa"
           test -f "$IPA_PATH"
           /usr/bin/unzip -l "$IPA_PATH" | grep -q "Payload/$APP_NAME/$EXECUTABLE_NAME"
 
           (
             cd "$IPA_ROOT"
-            shasum -a 256 "VellumAssistant-unsigned.ipa" > SHA256SUMS.txt
+            shasum -a 256 "VellumAssistant-production-unsigned.ipa" > SHA256SUMS.txt
           )
 
           {
@@ -121,9 +121,9 @@ jobs:
       - name: Upload unsigned IPA
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: VellumAssistant-unsigned-ipa-${{ github.sha }}
+          name: VellumAssistant-production-unsigned-ipa-${{ github.sha }}
           path: |
-            ${{ runner.temp }}/ipa-root/VellumAssistant-unsigned.ipa
+            ${{ runner.temp }}/ipa-root/VellumAssistant-production-unsigned.ipa
             ${{ runner.temp }}/ipa-root/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 14
