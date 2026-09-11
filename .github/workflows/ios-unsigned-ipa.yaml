@@ -1,0 +1,129 @@
+name: iOS Unsigned IPA
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-unsigned-ipa-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-ipa:
+    name: Build unsigned IPA
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: '1.3.11'
+
+      - name: Cache Bun packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.bun/install/cache
+          key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: bun-${{ runner.os }}-
+
+      - name: Install dependencies
+        working-directory: clients/web
+        run: |
+          bun install --frozen-lockfile \
+            --filter=@vellumai/web \
+            --filter=@vellumai/assistant
+
+      - name: Capacitor sync
+        working-directory: clients/web
+        env:
+          VELLUM_ENVIRONMENT: dev
+        run: bunx cap sync ios
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: clients/ios/App
+        run: xcodegen generate --spec project.yml
+
+      - name: Select Xcode 26.2
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+
+      - name: Build unsigned app
+        working-directory: clients/ios/App
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/DerivedData"
+          xcodebuild build \
+            -project App.xcodeproj \
+            -scheme "App Dev" \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM=""
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+
+          PRODUCTS_DIR="$RUNNER_TEMP/DerivedData/Build/Products/Release-iphoneos"
+          APP_PATH="$(find "$PRODUCTS_DIR" -maxdepth 1 -type d -name '*.app' | head -1)"
+          if [[ -z "$APP_PATH" ]]; then
+            echo "::error::No .app bundle found in $PRODUCTS_DIR"
+            find "$RUNNER_TEMP/DerivedData/Build/Products" -maxdepth 3 -type d | sort
+            exit 1
+          fi
+
+          APP_NAME="$(basename "$APP_PATH")"
+          EXECUTABLE_NAME="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$APP_PATH/Info.plist")"
+          BUNDLE_ID="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Info.plist")"
+
+          test -x "$APP_PATH/$EXECUTABLE_NAME"
+          test "$BUNDLE_ID" = "ai.vocify-inc.vellum-assistant-ios.dev"
+
+          IPA_ROOT="$RUNNER_TEMP/ipa-root"
+          rm -rf "$IPA_ROOT"
+          mkdir -p "$IPA_ROOT/Payload"
+          ditto "$APP_PATH" "$IPA_ROOT/Payload/$APP_NAME"
+
+          (
+            cd "$IPA_ROOT"
+            /usr/bin/zip -qry "VellumAssistant-unsigned.ipa" Payload
+          )
+
+          IPA_PATH="$IPA_ROOT/VellumAssistant-unsigned.ipa"
+          test -f "$IPA_PATH"
+          /usr/bin/unzip -l "$IPA_PATH" | grep -q "Payload/$APP_NAME/$EXECUTABLE_NAME"
+
+          (
+            cd "$IPA_ROOT"
+            shasum -a 256 "VellumAssistant-unsigned.ipa" > SHA256SUMS.txt
+          )
+
+          {
+            echo "APP_PATH=$APP_PATH"
+            echo "APP_NAME=$APP_NAME"
+            echo "EXECUTABLE_NAME=$EXECUTABLE_NAME"
+            echo "BUNDLE_ID=$BUNDLE_ID"
+            echo "IPA_PATH=$IPA_PATH"
+          } >> "$GITHUB_STEP_SUMMARY"
+          cat "$IPA_ROOT/SHA256SUMS.txt" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: VellumAssistant-unsigned-ipa-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/ipa-root/VellumAssistant-unsigned.ipa
+            ${{ runner.temp }}/ipa-root/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 14
