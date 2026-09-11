@@ -405,17 +405,10 @@ function AnimatedAvatarResolved({
               : "transform 0.3s ease-out",
         }}
       >
-        <circle
-          cx={bodyCenterX}
-          cy={bodyCenterY}
-          r={size * 0.46}
-          fill={color.hex}
-          opacity={0.24}
-        />
         <path
           ref={bodyPathRef}
           d={baseBodyPath}
-          fill="#FFD83D"
+          fill={color.hex}
           transform={bodyTransform}
           style={{
             transition: isAssistantBusy ? "d 0.3s ease-in-out" : "none",
@@ -423,16 +416,6 @@ function AnimatedAvatarResolved({
         />
       </g>
 
-      <rect
-        x={eyeCenterOutputX - size * 0.31}
-        y={eyeCenterOutputY - size * 0.135}
-        width={size * 0.62}
-        height={size * 0.27}
-        rx={size * 0.12}
-        fill="#171717"
-        stroke="#D8D8D8"
-        strokeWidth={size * 0.012}
-      />
       <g
         style={{
           // Blink first: a squish that a widening cancelled would read as the
@@ -450,13 +433,6 @@ function AnimatedAvatarResolved({
           <path key={i} d={p.svgPath} fill={p.color} transform={eyeTransform} />
         ))}
       </g>
-      <path
-        d={`M ${eyeCenterOutputX - size * 0.12} ${eyeCenterOutputY + size * 0.23} Q ${eyeCenterOutputX} ${eyeCenterOutputY + size * 0.31} ${eyeCenterOutputX + size * 0.12} ${eyeCenterOutputY + size * 0.23}`}
-        fill="none"
-        stroke="#111111"
-        strokeWidth={size * 0.018}
-        strokeLinecap="round"
-      />
     </svg>
   );
 }

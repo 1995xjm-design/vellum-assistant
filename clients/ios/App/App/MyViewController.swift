@@ -203,6 +203,7 @@ class MyViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(ShareInboxPlugin())
         installNavigationDelegateProxy()
         installSimplifiedChineseLocaleDefault()
+        installTranslationOverrides()
         installInputZoomPreventionUserScript()
         installViewportZoomLockUserScript()
         installTextSelectionHandler()
@@ -443,6 +444,129 @@ class MyViewController: CAPBridgeViewController {
             } catch (_) {}
             """,
             injectionTime: .atDocumentStart,
+            forMainFrameOnly: true
+        )
+        webView?.configuration.userContentController.addUserScript(script)
+    }
+
+    /// The production SPA is served remotely, so this private build applies a
+    /// bundled override table for text that the deployed Chinese catalog still
+    /// falls back to English. A MutationObserver keeps React updates covered.
+    private func installTranslationOverrides() {
+        guard let overridesURL = Bundle.main.url(
+            forResource: "TranslationOverrides",
+            withExtension: "json"
+        ),
+        let overridesData = try? Data(contentsOf: overridesURL),
+        let overridesJSON = String(data: overridesData, encoding: .utf8)
+        else { return }
+
+        let source = """
+        (function() {
+          const config = \(overridesJSON);
+          const exact = config.exact || {};
+          const patterns = (config.patterns || []).map((entry) => ({
+            regex: new RegExp(entry.pattern, 'u'),
+            replacement: entry.replacement
+          }));
+
+          function translate(value) {
+            if (!value) return value;
+            const trimmed = value.trim();
+            if (!trimmed) return value;
+            if (Object.prototype.hasOwnProperty.call(exact, trimmed)) {
+              return exact[trimmed];
+            }
+            for (const entry of patterns) {
+              if (entry.regex.test(trimmed)) {
+                return trimmed.replace(entry.regex, entry.replacement);
+              }
+            }
+            return value;
+          }
+
+          function translateText(node) {
+            const original = node.nodeValue || '';
+            const translated = translate(original);
+            if (translated !== original) {
+              const leading = original.match(/^\\s*/u)?.[0] || '';
+              const trailing = original.match(/\\s*$/u)?.[0] || '';
+              node.nodeValue = leading + translated + trailing;
+            }
+          }
+
+          function translateAttributes(element) {
+            for (const name of ['placeholder', 'title', 'aria-label', 'value']) {
+              const value = element.getAttribute(name);
+              if (!value) continue;
+              const translated = translate(value);
+              if (translated !== value) {
+                element.setAttribute(name, translated);
+              }
+            }
+          }
+
+          function scan(root) {
+            if (!root) return;
+            if (root.nodeType === Node.TEXT_NODE) {
+              translateText(root);
+              return;
+            }
+            if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) {
+              return;
+            }
+            if (root.nodeType === Node.ELEMENT_NODE) {
+              translateAttributes(root);
+            }
+            const walker = document.createTreeWalker(
+              root,
+              NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT
+            );
+            while (walker.nextNode()) {
+              const node = walker.currentNode;
+              if (node.nodeType === Node.TEXT_NODE) {
+                translateText(node);
+              } else if (node.nodeType === Node.ELEMENT_NODE) {
+                translateAttributes(node);
+              }
+            }
+          }
+
+          function start() {
+            scan(document.body || document.documentElement);
+            document.title = translate(document.title);
+            new MutationObserver((mutations) => {
+              for (const mutation of mutations) {
+                if (mutation.type === 'characterData') {
+                  translateText(mutation.target);
+                } else if (mutation.type === 'attributes') {
+                  translateAttributes(mutation.target);
+                } else {
+                  for (const node of mutation.addedNodes) {
+                    scan(node);
+                  }
+                }
+              }
+            }).observe(document.documentElement, {
+              subtree: true,
+              childList: true,
+              characterData: true,
+              attributes: true,
+              attributeFilter: ['placeholder', 'title', 'aria-label', 'value']
+            });
+            window.setInterval(() => scan(document.body), 1500);
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', start, { once: true });
+          } else {
+            start();
+          }
+        })();
+        """
+        let script = WKUserScript(
+            source: source,
+            injectionTime: .atDocumentEnd,
             forMainFrameOnly: true
         )
         webView?.configuration.userContentController.addUserScript(script)

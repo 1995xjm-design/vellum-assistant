@@ -204,46 +204,12 @@ function iconCellSvg(
   const scale = Math.min(span / bounds.width, span / bounds.height);
   const translateX = x + size / 2 - (bounds.minX + bounds.width / 2) * scale;
   const translateY = y + size / 2 - (bounds.minY + bounds.height / 2) * scale;
-  const eyeTransform = `matrix(${scale},0,0,${scale},${translateX},${translateY})`;
-  const goggleX = bounds.minX - bounds.width * 0.09;
-  const goggleY = bounds.minY - bounds.height * 0.12;
-  const goggleWidth = bounds.width * 1.18;
-  const goggleHeight = bounds.height * 1.24;
-  const faceCenterX = x + size / 2;
-  const faceCenterY = y + size * 0.47;
-  const faceRadius = size * 0.34;
-  const bodyTop = y + size * 0.67;
-  const strapTop = y + size * 0.34;
-  const mouthY = y + size * 0.72;
   return (
     `<rect x="${x}" y="${y}" width="${size}" height="${size}" fill="${hex}"/>` +
-    `<circle cx="${faceCenterX}" cy="${faceCenterY}" r="${faceRadius}" fill="#FFD83D"/>` +
-    `<path d="M ${x + size * 0.34} ${strapTop} Q ${x + size * 0.25} ${y + size * 0.14} ${x + size * 0.38} ${y + size * 0.12}" ` +
-    `fill="none" stroke="#111111" stroke-width="${size * 0.018}" stroke-linecap="round"/>` +
-    `<path d="M ${x + size * 0.66} ${strapTop} Q ${x + size * 0.75} ${y + size * 0.14} ${x + size * 0.62} ${y + size * 0.12}" ` +
-    `fill="none" stroke="#111111" stroke-width="${size * 0.018}" stroke-linecap="round"/>` +
-    `<path d="M ${x + size * 0.17} ${strapTop + size * 0.13} H ${x + size * 0.83} " ` +
-    `stroke="#111111" stroke-width="${size * 0.038}" stroke-linecap="round"/>` +
-    `<g transform="${eyeTransform}">` +
-    `<rect x="${goggleX}" y="${goggleY}" width="${goggleWidth}" height="${goggleHeight}" ` +
-    `rx="${goggleHeight * 0.32}" fill="#171717"/>` +
-    `<rect x="${goggleX}" y="${goggleY}" width="${goggleWidth}" height="${goggleHeight}" ` +
-    `rx="${goggleHeight * 0.32}" fill="none" stroke="#D7D7D7" stroke-width="${Math.max(bounds.height * 0.035, 2)}"/>` +
-    eyePathsSvg(eyeStyle, "matrix(1,0,0,1,0,0)") +
-    `</g>` +
-    `<path d="M ${faceCenterX - size * 0.085} ${mouthY} ` +
-    `Q ${faceCenterX} ${mouthY + size * 0.055} ${faceCenterX + size * 0.085} ${mouthY}" ` +
-    `fill="none" stroke="#111111" stroke-width="${size * 0.016}" stroke-linecap="round"/>` +
-    `<path d="M ${x + size * 0.28} ${bodyTop} ` +
-    `Q ${faceCenterX} ${bodyTop - size * 0.08} ${x + size * 0.72} ${bodyTop} ` +
-    `L ${x + size * 0.82} ${y + size} H ${x + size * 0.18} Z" fill="#2F5FB0"/>` +
-    `<path d="M ${x + size * 0.38} ${bodyTop + size * 0.005} ` +
-    `L ${x + size * 0.47} ${y + size * 0.91} M ${x + size * 0.62} ${bodyTop + size * 0.005} ` +
-    `L ${x + size * 0.53} ${y + size * 0.91}" ` +
-    `stroke="#F4F4F4" stroke-width="${size * 0.026}" stroke-linecap="round"/>` +
-    `<rect x="${x + size * 0.43}" y="${y + size * 0.78}" width="${size * 0.14}" height="${size * 0.12}" ` +
-    `rx="${size * 0.018}" fill="#234B91"/>` +
-    `<circle cx="${x + size * 0.29}" cy="${y + size * 0.47}" r="${size * 0.035}" fill="#FFFFFF" opacity="0.28"/>`
+    eyePathsSvg(
+      eyeStyle,
+      `matrix(${scale},0,0,${scale},${translateX},${translateY})`,
+    )
   );
 }
 
