@@ -505,14 +505,14 @@ struct VoiceApprovalControls: View {
     var body: some View {
         HStack(spacing: 10) {
             VoiceApprovalButton(
-                title: "Approve",
+                title: "批准",
                 symbol: "checkmark",
                 action: .approveRequest,
                 requestId: requestId,
                 prominent: true
             )
             VoiceApprovalButton(
-                title: "Deny",
+                title: "拒绝",
                 symbol: "xmark",
                 action: .denyRequest,
                 requestId: requestId

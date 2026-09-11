@@ -45,6 +45,9 @@ jobs:
           VELLUM_ENVIRONMENT: production
         run: bunx cap sync ios
 
+      - name: Generate minion-style avatar icons
+        run: bun clients/ios/scripts/generate-avatar-icons.ts
+
       - name: Install XcodeGen
         run: brew install xcodegen
 

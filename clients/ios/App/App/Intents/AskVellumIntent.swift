@@ -29,17 +29,17 @@ import AppIntents
 /// what should happen for a bare "Hey Siri, ask Vellum": the parameter is
 /// non-optional, so Siri prompts rather than launching into an empty session.
 struct AskVellumIntent: AppIntent {
-    static var title: LocalizedStringResource = "Ask a question"
+    static var title: LocalizedStringResource = "提问"
     static var description = IntentDescription(
-        "Open Vellum and ask your question right away in a new conversation."
+        "打开 Vellum，并在新对话中立即提问。"
     )
 
     /// What the user wants to ask. Non-optional on purpose: an invocation with
     /// no content should make Siri ask for it, and a `String?` would instead
     /// resolve to `nil` and start a silent session.
     @Parameter(
-        title: "Request",
-        requestValueDialog: IntentDialog("What should I ask Vellum?")
+        title: "问题",
+        requestValueDialog: IntentDialog("你想问 Vellum 什么？")
     )
     var request: String
 

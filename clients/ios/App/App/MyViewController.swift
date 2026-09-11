@@ -202,6 +202,7 @@ class MyViewController: CAPBridgeViewController {
         bridge?.registerPluginInstance(AppIconPlugin())
         bridge?.registerPluginInstance(ShareInboxPlugin())
         installNavigationDelegateProxy()
+        installSimplifiedChineseLocaleDefault()
         installInputZoomPreventionUserScript()
         installViewportZoomLockUserScript()
         installTextSelectionHandler()
@@ -430,6 +431,23 @@ class MyViewController: CAPBridgeViewController {
         contentController.addUserScript(script)
     }
 
+    /// This private build starts in Simplified Chinese regardless of the host
+    /// device language. The production SPA reads `device:locale` before the
+    /// first render, so writing it at document start avoids an English flash
+    /// and covers devices whose system language is not Chinese.
+    private func installSimplifiedChineseLocaleDefault() {
+        let script = WKUserScript(
+            source: """
+            try {
+              window.localStorage.setItem('device:locale', 'zh');
+            } catch (_) {}
+            """,
+            injectionTime: .atDocumentStart,
+            forMainFrameOnly: true
+        )
+        webView?.configuration.userContentController.addUserScript(script)
+    }
+
     /// Append `maximum-scale=1.0, user-scalable=no` to the existing viewport
     /// meta tag so WKWebView cannot zoom beyond 1x. Injected natively rather
     /// than baked into `index.html` so regular mobile-browser users retain
@@ -556,17 +574,17 @@ extension MyViewController: WebViewNavigationFailureObserver {
 
             let host = origin.host ?? origin.absoluteString
             let alert = UIAlertController(
-                title: "Can't reach \(host)",
-                message: "The assistant may be offline or unreachable from this device.",
+                title: "无法连接 \(host)",
+                message: "助手可能离线，或当前设备无法访问它。",
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: "Retry", style: .default) { [weak self] _ in
+            alert.addAction(UIAlertAction(title: "重试", style: .default) { [weak self] _ in
                 guard let self else { return }
                 self.disarmUnreachableAlert()
                 self.appliedServerURL = origin
                 self.webView?.load(URLRequest(url: Self.appEntryURL(forBase: origin)))
             })
-            alert.addAction(UIAlertAction(title: "Choose Assistant", style: .default) { [weak self] _ in
+            alert.addAction(UIAlertAction(title: "选择助手", style: .default) { [weak self] _ in
                 guard let self else { return }
                 self.disarmUnreachableAlert()
                 self.openAssistantChooser()
@@ -762,7 +780,7 @@ final class QuoteReplyWebView: WKWebView {
     override func buildMenu(with builder: UIMenuBuilder) {
         super.buildMenu(with: builder)
         guard #available(iOS 16.0, *), canQuoteReply else { return }
-        let replyAction = UIAction(title: "Reply") { [weak self] _ in
+        let replyAction = UIAction(title: "回复") { [weak self] _ in
             self?.evaluateJavaScript(
                 "window.__vellumQuoteReplyFromSelection && window.__vellumQuoteReplyFromSelection()"
             )

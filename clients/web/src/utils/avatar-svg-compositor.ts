@@ -26,14 +26,6 @@ function computeBodyPlacement(
   return { bodyScale, bodyTx, bodyTy };
 }
 
-function computeBodyTransform(
-  bodyShape: BodyShapeDefinition,
-  size: number,
-): string {
-  const { bodyScale, bodyTx, bodyTy } = computeBodyPlacement(bodyShape, size);
-  return `matrix(${bodyScale},0,0,${bodyScale},${bodyTx},${bodyTy})`;
-}
-
 /**
  * Compute the SVG transform strings for body and eye groups.
  */
@@ -175,21 +167,18 @@ export function composeSvgFromDefinitions(
   components: CharacterComponents,
   size: number = 512,
 ): string {
+  const backdrop = minionBackdropSvg(bodyShape, color, size);
   // Body-only (eyeless) avatar: skip the eye-transform math and emit no eye paths.
   if (!eyeStyle) {
-    const bodyTransform = computeBodyTransform(bodyShape, size);
-    const bodyPath = `<path d="${escapeAttr(bodyShape.svgPath)}" fill="${escapeAttr(color.hex)}" transform="${bodyTransform}"/>`;
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${bodyPath}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${backdrop}</svg>`;
   }
 
-  const { bodyTransform, eyeTransform } = computeTransforms(
+  const { eyeTransform } = computeTransforms(
     bodyShape,
     eyeStyle,
     components,
     size,
   );
-
-  const bodyPath = `<path d="${escapeAttr(bodyShape.svgPath)}" fill="${escapeAttr(color.hex)}" transform="${bodyTransform}"/>`;
 
   const eyePaths = eyeStyle.paths
     .map(
@@ -198,5 +187,49 @@ export function composeSvgFromDefinitions(
     )
     .join("");
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${bodyPath}${eyePaths}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${backdrop}${eyePaths}</svg>`;
+}
+
+/**
+ * Original yellow goggle-worker styling shared by every avatar trait
+ * combination. The selected trait color tints the background disc, while the
+ * face and overalls stay consistent so previously stored avatars also adopt
+ * the new visual language.
+ */
+function minionBackdropSvg(
+  bodyShape: BodyShapeDefinition,
+  color: ColorDefinition,
+  size: number,
+): string {
+  const viewBox = bodyShape.viewBox;
+  const minSide = Math.min(viewBox.width, viewBox.height);
+  const cx = bodyShape.faceCenter.x;
+  const cy = bodyShape.faceCenter.y;
+  const faceRadius = minSide * 0.34;
+  const goggleWidth = faceRadius * 1.72;
+  const goggleHeight = faceRadius * 0.82;
+  const goggleX = cx - goggleWidth / 2;
+  const goggleY = cy - goggleHeight / 2 - faceRadius * 0.06;
+  const bodyTop = cy + faceRadius * 0.72;
+  const bodyBottom = viewBox.height * 0.98;
+  const backgroundRadius = minSide * 0.46;
+  return (
+    `<circle cx="${cx}" cy="${cy}" r="${backgroundRadius}" fill="${escapeAttr(color.hex)}" opacity="0.22"/>` +
+    `<path d="M ${cx - faceRadius * 0.78} ${bodyTop} ` +
+    `Q ${cx} ${bodyTop - faceRadius * 0.24} ${cx + faceRadius * 0.78} ${bodyTop} ` +
+    `L ${cx + faceRadius * 0.98} ${bodyBottom} H ${cx - faceRadius * 0.98} Z" fill="#2F5FB0"/>` +
+    `<path d="M ${cx - faceRadius * 0.36} ${bodyTop + faceRadius * 0.02} ` +
+    `L ${cx - faceRadius * 0.12} ${bodyBottom} M ${cx + faceRadius * 0.36} ${bodyTop + faceRadius * 0.02} ` +
+    `L ${cx + faceRadius * 0.12} ${bodyBottom}" stroke="#F5F5F5" stroke-width="${faceRadius * 0.08}" stroke-linecap="round"/>` +
+    `<circle cx="${cx}" cy="${cy}" r="${faceRadius}" fill="#FFD83D"/>` +
+    `<path d="M ${cx - faceRadius * 0.95} ${goggleY + goggleHeight * 0.42} H ${cx + faceRadius * 0.95}" ` +
+    `stroke="#111111" stroke-width="${faceRadius * 0.13}" stroke-linecap="round"/>` +
+    `<rect x="${goggleX}" y="${goggleY}" width="${goggleWidth}" height="${goggleHeight}" ` +
+    `rx="${goggleHeight * 0.34}" fill="#171717"/>` +
+    `<rect x="${goggleX}" y="${goggleY}" width="${goggleWidth}" height="${goggleHeight}" ` +
+    `rx="${goggleHeight * 0.34}" fill="none" stroke="#D8D8D8" stroke-width="${faceRadius * 0.055}"/>` +
+    `<path d="M ${cx - faceRadius * 0.22} ${cy + faceRadius * 0.5} ` +
+    `Q ${cx} ${cy + faceRadius * 0.68} ${cx + faceRadius * 0.22} ${cy + faceRadius * 0.5}" ` +
+    `fill="none" stroke="#111111" stroke-width="${faceRadius * 0.055}" stroke-linecap="round"/>`
+  );
 }

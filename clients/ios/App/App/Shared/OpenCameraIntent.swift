@@ -13,9 +13,9 @@ import AppIntents
 /// The launch-mode declarations below make the system perform the intent in
 /// the app process, so the appex's copy of `perform()` never runs.
 struct OpenCameraIntent: AppIntent {
-    static var title: LocalizedStringResource = "Take a photo"
+    static var title: LocalizedStringResource = "拍照"
     static var description = IntentDescription(
-        "Open Vellum and take a photo to send to your assistant."
+        "打开 Vellum 拍照并发送给助手。"
     )
 
     /// Both launch-mode declarations are load-bearing; do not "clean this up".

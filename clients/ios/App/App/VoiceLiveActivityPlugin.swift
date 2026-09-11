@@ -285,8 +285,8 @@ public class VoiceLiveActivityPlugin: CAPPlugin, CAPBridgedPlugin {
         // for the same reason the activity line names no arguments — it can be
         // read by anyone holding the phone.
         return AlertConfiguration(
-            title: "Waiting on you",
-            body: "Your assistant needs permission to continue.",
+            title: "需要你的确认",
+            body: "你的助手需要授权才能继续。",
             sound: .default
         )
     }

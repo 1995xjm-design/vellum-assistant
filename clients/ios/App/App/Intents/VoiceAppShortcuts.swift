@@ -26,20 +26,20 @@ struct VoiceAppShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: StartVoiceModeIntent(),
             phrases: [
-                "Talk to \(.applicationName)",
-                "Start voice mode in \(.applicationName)",
-                "Voice mode in \(.applicationName)",
+                "和 \(.applicationName) 说话",
+                "在 \(.applicationName) 中开始语音模式",
+                "\(.applicationName) 语音模式",
             ],
-            shortTitle: "Voice mode",
+            shortTitle: "语音模式",
             systemImageName: "waveform"
         )
         AppShortcut(
             intent: StartNewVoiceConversationIntent(),
             phrases: [
-                "New voice conversation in \(.applicationName)",
-                "Start a new voice chat in \(.applicationName)",
+                "在 \(.applicationName) 中开始新语音对话",
+                "在 \(.applicationName) 中开始新的语音聊天",
             ],
-            shortTitle: "New voice conversation",
+            shortTitle: "新语音对话",
             systemImageName: "waveform.badge.plus"
         )
         // These phrases end at the app name rather than trailing into the
@@ -50,11 +50,11 @@ struct VoiceAppShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: AskVellumIntent(),
             phrases: [
-                "Ask \(.applicationName)",
-                "Ask \(.applicationName) a question",
-                "Ask \(.applicationName) something",
+                "向 \(.applicationName) 提问",
+                "问 \(.applicationName) 一个问题",
+                "让 \(.applicationName) 回答",
             ],
-            shortTitle: "Ask a question",
+            shortTitle: "提问",
             systemImageName: "questionmark.bubble"
         )
     }

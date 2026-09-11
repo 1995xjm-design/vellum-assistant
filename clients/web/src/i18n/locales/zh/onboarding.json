@@ -134,6 +134,9 @@
   "stepIndicator": {
     "ariaLabel": "第 {current} 步，共 {total} 步"
   },
+  "googleCalendar": {
+    "providerLabel": "Google 日历"
+  },
   "introductionScreen": {
     "greetingNamed": "嘿，{name}！",
     "greeting": "嘿！",

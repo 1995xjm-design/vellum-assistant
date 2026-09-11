@@ -29,14 +29,14 @@ import AppIntents
 /// which drags in donation and localization concerns that can follow later
 /// if anyone asks.
 struct SendMessageToChatIntent: AppIntent {
-    static var title: LocalizedStringResource = "Send Message to Chat"
+    static var title: LocalizedStringResource = "向对话发送消息"
     static var description = IntentDescription(
-        "Open a chosen Vellum chat and send your message there, continuing that conversation."
+        "打开指定的 Vellum 对话，并在其中发送消息，继续之前的上下文。"
     )
 
     @Parameter(
-        title: "Chat",
-        requestValueDialog: IntentDialog("Which chat should the message go to?")
+        title: "对话",
+        requestValueDialog: IntentDialog("要把消息发送到哪个对话？")
     )
     var chat: ChatEntity
 
@@ -45,13 +45,13 @@ struct SendMessageToChatIntent: AppIntent {
     /// arrives anyway (Shortcuts can pass one) degrades in `ThreadDeepLink`
     /// to just opening the chat.
     @Parameter(
-        title: "Message",
-        requestValueDialog: IntentDialog("What should the message say?")
+        title: "消息",
+        requestValueDialog: IntentDialog("消息内容是什么？")
     )
     var message: String
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Send \(\.$message) to \(\.$chat)")
+        Summary("把 \(\.$message) 发送到 \(\.$chat)")
     }
 
     // Same dual declaration as the voice intents, for the same reason: iOS 26

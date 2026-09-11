@@ -1409,6 +1409,16 @@
     "unavailableTitle": "预览版渠道不可用",
     "unknownDate": "未知"
   },
+  "previewUiChannel": {
+    "description": "在此浏览器中加载该应用的预览版。不会影响您的助手。",
+    "offAriaLabel": "预览界面已关闭",
+    "onAriaLabel": "预览界面已开启",
+    "runningPreview": "正在运行：预览版 {version}",
+    "runningStable": "正在运行：稳定版 {version}",
+    "title": "预览界面",
+    "unavailableHint": "当前没有提供预览版，因此此浏览器仍在使用稳定版。请在开发者工具中删除 vellum_preview Cookie 以重置。",
+    "versionUnknown": "未知"
+  },
   "privacyPage": {
     "llmLogRetentionDescription": "在此设备上保留 LLM 请求和响应日志的时长。这些日志记录发送给模型提供商的提示词和完成内容，用于调试。较短的保留期可提高隐私性；较长的保留期有助于排查问题。",
     "llmLogRetentionLabel": "LLM 请求日志保留期",

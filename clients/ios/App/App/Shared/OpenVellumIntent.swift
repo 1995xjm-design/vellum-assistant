@@ -14,9 +14,9 @@ import AppIntents
 /// appex. The launch-mode declarations below make the system perform the
 /// intent in the app process, so the appex's copy of `perform()` never runs.
 struct OpenVellumIntent: AppIntent {
-    static var title: LocalizedStringResource = "Open Vellum"
+    static var title: LocalizedStringResource = "打开 Vellum"
     static var description = IntentDescription(
-        "Open Vellum and pick up where you left off."
+        "打开 Vellum 并回到上次离开的位置。"
     )
 
     /// Both launch-mode declarations are load-bearing; do not "clean this up".

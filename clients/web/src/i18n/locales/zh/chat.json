@@ -87,6 +87,10 @@
   "assistantContentDisclosure": {
     "earlierActivity": "更早的活动"
   },
+  "assistantSectionToggle": {
+    "hide": "隐藏来自{name}的对话",
+    "show": "显示来自{name}的对话"
+  },
   "assistantNavItem": {
     "newChat": "新建聊天"
   },
@@ -531,6 +535,9 @@
     "profileSwitchFallback": "切换配置文件失败。请重试。",
     "quickAdd": "新建模型"
   },
+  "coachmarkPress": {
+    "turn": "我点击了{label}，接下来呢？"
+  },
   "confirmationActions": {
     "submitFailed": "提交确认失败。请重试。",
     "submitFailedRuleAvailable": "提交确认失败，但您仍然可以创建规则。"
@@ -794,6 +801,7 @@
     "expand": "显示帧筛选读数",
     "decisionOrder": "决策顺序",
     "detailLabel": "细节度 (亮度标准差)",
+    "forcedNoveltyThresholdLabel": "用户指定阈值",
     "keep": "保留",
     "keptFrameAlt": "已保留画面",
     "maxIntervalLabel": "心跳间隔",
@@ -806,9 +814,11 @@
     "reasonFeatureless": "细节过少，无法比较。",
     "reasonFirst": "尚未保留画面，画面已稳定。",
     "reasonForced": "为当前提出的问题保留。",
+    "reasonAnswered": "已按要求采集，但上一张照片已经显示了该内容。",
     "reasonHeartbeat": "画面未发生变化，但上一张照片时间已过久。",
     "reasonMoving": "画面仍在晃动中。",
     "reasonNovel": "与上一张照片相比发生了足够的变化。",
+    "reasonSettling": "已停止移动，但画面稳定时间还不够长。",
     "reasonUnchanged": "画面稳定、采集时间近且与上一张照片基本一致。",
     "reasonWarmup": "仍处于曝光预热阶段。",
     "recentFrames": "最近画面帧",
@@ -819,9 +829,11 @@
     "stepFeatureless": "最低细节度",
     "stepFirst": "首帧保留",
     "stepForced": "用户请求",
+    "stepAnswered": "已经显示",
     "stepHeartbeat": "心跳",
     "stepMoving": "画面稳定",
     "stepNovel": "新颖度",
+    "stepSettling": "画面稳定",
     "stepUnchanged": "未变更",
     "stepWarmup": "预热",
     "surfaceVoice": "语音通话摄像头",

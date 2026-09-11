@@ -12,9 +12,9 @@ import AppIntents
 /// the appex, while the launch-mode declarations below make the system perform
 /// the intent in the app process.
 struct OpenNewChatIntent: AppIntent {
-    static var title: LocalizedStringResource = "New chat"
+    static var title: LocalizedStringResource = "新对话"
     static var description = IntentDescription(
-        "Open Vellum and start a new chat."
+        "打开 Vellum 并开始新对话。"
     )
 
     /// Both launch-mode declarations are load-bearing; do not "clean this up".

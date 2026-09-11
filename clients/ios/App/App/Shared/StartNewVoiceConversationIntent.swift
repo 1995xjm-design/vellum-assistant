@@ -16,9 +16,9 @@ import AppIntents
 /// safe: the system performs the intent in the app process, so the appex's
 /// copy of `perform()` never runs.
 struct StartNewVoiceConversationIntent: AppIntent {
-    static var title: LocalizedStringResource = "New voice conversation"
+    static var title: LocalizedStringResource = "新语音对话"
     static var description = IntentDescription(
-        "Open Vellum and start a brand-new voice conversation."
+        "打开 Vellum 并开始一段全新的语音对话。"
     )
 
     @available(iOS 26.0, *)

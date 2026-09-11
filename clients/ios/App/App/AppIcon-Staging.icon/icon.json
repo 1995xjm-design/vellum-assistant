@@ -27,10 +27,10 @@
           "image-name": "eyes.svg",
           "name": "eyes",
           "position": {
-            "scale": 2.213,
+            "scale": 1,
             "translation-in-points": [
-              61.33,
-              -14.21
+              0,
+              0
             ]
           }
         }

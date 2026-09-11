@@ -10,8 +10,8 @@ import UserNotifications
 enum NotificationCategories {
     static let intentIdentifier = "notificationIntent"
     static let viewActionIdentifier = "view"
-    /// English fallback used before the web catalog can re-register a localized title.
-    static let viewActionTitle = "Go to Conversation"
+    /// Chinese fallback used before the web catalog can re-register a localized title.
+    static let viewActionTitle = "前往对话"
 
     static func intentCategory() -> UNNotificationCategory {
         let view = UNNotificationAction(

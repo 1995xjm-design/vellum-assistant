@@ -222,7 +222,7 @@ extension WidgetActionTile where ActionIntent == OpenNewChatIntent {
     static func newChat(accent: WidgetSoftAccent, avatarImage: UIImage? = nil, scale: CGFloat = 1) -> Self {
         WidgetActionTile(
             intent: OpenNewChatIntent(),
-            title: "New Chat",
+            title: "新对话",
             fill: accent.fill,
             tint: accent.onFill,
             carriesAccent: true,
@@ -241,7 +241,7 @@ extension WidgetActionTile where ActionIntent == StartNewVoiceConversationIntent
         WidgetActionTile(
             intent: StartNewVoiceConversationIntent(),
             icon: Image(systemName: "waveform"),
-            title: "Voice",
+            title: "语音",
             fill: WidgetTheme.voiceFill,
             tint: WidgetTheme.textPrimary,
             scale: scale

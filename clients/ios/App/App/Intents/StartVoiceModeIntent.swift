@@ -13,9 +13,9 @@ import AppIntents
 /// `VoiceAppShortcuts` carries both intents into Siri, Spotlight, and the
 /// Action Button picker; add any new phrase there rather than here.
 struct StartVoiceModeIntent: AppIntent {
-    static var title: LocalizedStringResource = "Start voice mode"
+    static var title: LocalizedStringResource = "开始语音模式"
     static var description = IntentDescription(
-        "Open Vellum and start talking, picking up a voice conversation already in progress."
+        "打开 Vellum 开始说话；如果已有语音通话，则继续当前通话。"
     )
 
     // iOS 26 soft-deprecated `openAppWhenRun` in favor of `supportedModes`, but

@@ -51,18 +51,18 @@ enum VoiceSessionControlAction: String, AppEnum {
     case denyRequest
 
     static var typeDisplayRepresentation: TypeDisplayRepresentation {
-        "Voice session control"
+        "语音会话控制"
     }
 
     static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
         [
-            .muteMicrophone: "Mute microphone",
-            .unmuteMicrophone: "Unmute microphone",
-            .muteAssistantAudio: "Mute assistant audio",
-            .unmuteAssistantAudio: "Unmute assistant audio",
-            .endSession: "End voice session",
-            .approveRequest: "Approve the pending request",
-            .denyRequest: "Deny the pending request",
+            .muteMicrophone: "静音麦克风",
+            .unmuteMicrophone: "取消麦克风静音",
+            .muteAssistantAudio: "静音助手声音",
+            .unmuteAssistantAudio: "取消助手声音静音",
+            .endSession: "结束语音会话",
+            .approveRequest: "批准待处理请求",
+            .denyRequest: "拒绝待处理请求",
         ]
     }
 }
@@ -96,10 +96,10 @@ enum VoiceSessionControlAction: String, AppEnum {
 /// Reference:
 /// https://developer.apple.com/documentation/appintents/liveactivityintent
 struct VoiceSessionControlIntent: LiveActivityIntent {
-    static var title: LocalizedStringResource { "Voice session control" }
+    static var title: LocalizedStringResource { "语音会话控制" }
     static var isDiscoverable: Bool { false }
 
-    @Parameter(title: "Action")
+    @Parameter(title: "操作")
     var action: VoiceSessionControlAction
 
     /// The confirmation an ``VoiceSessionControlAction/approveRequest`` or
@@ -112,7 +112,7 @@ struct VoiceSessionControlIntent: LiveActivityIntent {
     /// this request or drops the press, so a button drawn against a prompt
     /// that has since been decided cannot approve the next one to arrive. See
     /// ``VoiceSessionControlAction/approveRequest``.
-    @Parameter(title: "Request")
+    @Parameter(title: "请求")
     var requestId: String
 
     init() {}

@@ -1,1 +1,45 @@
-{}
+{
+  "welcome": {
+    "title": "欢迎！",
+    "subtitle": "试试这些精选任务，了解你的助手能为你做些什么。",
+    "showFullList": "查看完整列表",
+    "later": "稍后再做"
+  },
+  "celebration": {
+    "title": "完成啦！",
+    "subtitle": "已完成三个任务。想要更多时，完整列表一直在这里。"
+  },
+  "row": {
+    "customLabel": "自定义：",
+    "writeYourOwn": "自己写一个",
+    "customPlaceholder": "输入你想让助手做的事",
+    "working": "处理中",
+    "open": "打开",
+    "done": "完成",
+    "steps": "{count, plural, other {# 步}}",
+    "send": "发送",
+    "openTask": "打开{title}"
+  },
+  "pill": {
+    "label": "建议",
+    "progress": "{done}/{total}",
+    "aria": "建议，已完成 {done}/{total}"
+  },
+  "menu": {
+    "inspirationList": "灵感清单"
+  },
+  "launch": {
+    "noAssistant": "当前没有连接助手。",
+    "unknownTask": "该任务已不可用。",
+    "failed": "无法启动任务，请重试。",
+    "running": "正在侧边栏运行",
+    "openConversation": "打开对话"
+  },
+  "page": {
+    "title": "开始使用",
+    "loading": "正在加载建议"
+  },
+  "catalog": {
+    "assistantFallback": "你的助手"
+  }
+}

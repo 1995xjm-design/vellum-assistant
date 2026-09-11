@@ -147,7 +147,7 @@ struct StatusWidgetView: View {
     private func chatPill(height: CGFloat, scale: CGFloat) -> some View {
         PillActionButton(
             intent: OpenNewChatIntent(),
-            title: "Chat",
+            title: "聊天",
             fill: entry.softAccent.fill,
             tint: entry.softAccent.onFill,
             height: height,
