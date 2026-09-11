@@ -304,27 +304,6 @@
     "Working": "处理中",
     "Open": "打开",
     "Done": "完成",
-    "0 steps": "0 步",
-    "1 step": "1 步",
-    "2 steps": "2 步",
-    "3 steps": "3 步",
-    "4 steps": "4 步",
-    "5 steps": "5 步",
-    "6 steps": "6 步",
-    "7 steps": "7 步",
-    "8 steps": "8 步",
-    "9 steps": "9 步",
-    "10 steps": "10 步",
-    "11 steps": "11 步",
-    "12 steps": "12 步",
-    "13 steps": "13 步",
-    "14 steps": "14 步",
-    "15 steps": "15 步",
-    "16 steps": "16 步",
-    "17 steps": "17 步",
-    "18 steps": "18 步",
-    "19 steps": "19 步",
-    "20 steps": "20 步",
     "Send": "发送",
     "Suggestions": "建议",
     "Inspiration List": "灵感清单",
@@ -357,6 +336,10 @@
     {
       "pattern": "^Names, routines, pet peeves\\. (.+?) remembers\\.$",
       "replacement": "姓名、习惯、喜好，$1都会记住。"
+    },
+    {
+      "pattern": "^(\\d+) (?:step|steps)$",
+      "replacement": "$1 步"
     },
     {
       "pattern": "^Open (.+?)$",
